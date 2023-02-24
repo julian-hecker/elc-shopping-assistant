@@ -20,14 +20,14 @@ const linking: LinkingOptions<RootStackParamList> = {
               TabOneScreen: 'one',
             },
           },
-          TabTwo: {
+          Scanner: {
             screens: {
               TabTwoScreen: 'two',
             },
           },
         },
       },
-      Modal: 'modal',
+      'Product Info': 'product',
       NotFound: '*',
     },
   },
