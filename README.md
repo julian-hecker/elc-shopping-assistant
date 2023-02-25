@@ -78,7 +78,6 @@ Once presented with product details, the details are read aloud using text-to-sp
       <td>React Native Application</td>
       <td>User Experience, Accessibility</td>
     </tr>
-    <tr></tr>
   </tbody>
 </table>
 
