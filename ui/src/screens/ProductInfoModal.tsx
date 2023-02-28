@@ -1,9 +1,8 @@
-import { speak } from 'expo-speech';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet } from 'react-native';
 
 import { Screen, Text, View } from '../components/Themed';
-import { usetGetDocFromHTML } from '../hooks';
+import { useSpeech, usetGetDocFromHTML } from '../hooks';
 import { RootStackScreenProps } from '../types';
 
 function getDataFromDocument(doc: Document) {
@@ -27,6 +26,7 @@ export function ProductInfoModal({
   route,
 }: RootStackScreenProps<'Product Info'>) {
   const { barcode, type } = route.params;
+  const { speak } = useSpeech();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [data, setData] = useState<any>(null);

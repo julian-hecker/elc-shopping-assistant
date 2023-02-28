@@ -6,7 +6,7 @@ We created an application that makes it easy for blind and visually impaired use
 
 ## Background
 
-According to the [Vision Loss Expert Group](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5820628/), in 2015 there were over 250 million people with severe visual impairment, including 36 million people who were totally blind -- with these statistics only expected to grow over time.
+According to the [Vision Loss Expert Group](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5820628/), in 2015 there were over 250 million people with moderate-to-severe visual impairment (MSVI), including 36 million people who were totally blind -- with these statistics only expected to grow over time.
 
 Many things that sighted people take for granted are especially difficult for the visually impaired. Something seemingly as simple as shopping presents a wide array of problems, including accessing basic information about the products they buy.
 
