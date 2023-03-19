@@ -2,7 +2,7 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import { load } from '@tensorflow-models/mobilenet';
+import * as mobilenet from '@tensorflow-models/mobilenet';
 import * as tf from '@tensorflow/tfjs';
 import { cameraWithTensors } from '@tensorflow/tfjs-react-native';
 import {
@@ -13,8 +13,8 @@ import { Camera } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet } from 'react-native';
 
-import { useBarCodeScanner, useSound } from '../../hooks';
-import { View } from '../Themed';
+import { useBarCodeScanner, useSound, useSpeech } from '../../hooks';
+import { Text, View } from '../Themed';
 
 const useTensorflowModel = <Model,>(
   loadModel?: () => Promise<Model>,
@@ -36,12 +36,16 @@ const TensorCamera = cameraWithTensors(Camera);
 
 export const Scanner = () => {
   const { scanned, setScanned, hasPermission } = useBarCodeScanner();
+  const { speak } = useSpeech();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const { playSound: playConfirm } = useSound(
     require('../../assets/audio/beep.mp3'),
   );
-  const { backend, model } = useTensorflowModel(() => load());
+  const { backend, model } = useTensorflowModel(() =>
+    mobilenet.load({ version: 2, alpha: 1.0 }),
+  );
+  const [prediction, setPrediction] = useState<string>('');
 
   const barCodeTypes = [
     Constants.BarCodeType.ean13,
@@ -51,6 +55,10 @@ export const Scanner = () => {
     Constants.BarCodeType.upc_ean,
     Constants.BarCodeType.qr,
   ];
+
+  useEffect(() => {
+    speak(prediction);
+  }, [prediction]);
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({
     data,
@@ -73,10 +81,17 @@ export const Scanner = () => {
         const image = images.next().value;
         if (!image) return;
         frame++;
-        if (frame % 30 !== 0) return;
+        if (frame % 60 !== 0) return;
 
-        const predictions = model.classify(image);
-        console.log(predictions);
+        const predictions = await model.classify(image);
+        const topPredictions = predictions
+          .sort(({ probability: a }, { probability: b }) => b - a)
+          .filter(({ probability }) => probability > 0.5);
+        const prediction = topPredictions?.[0];
+
+        console.log(prediction, predictions);
+
+        !!prediction && setPrediction(prediction.className);
 
         tf.dispose([image]);
       })();
@@ -104,23 +119,28 @@ export const Scanner = () => {
   }
 
   return (
-    <TensorCamera
-      barCodeScannerSettings={{
-        barCodeTypes,
-      }}
-      onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-      style={StyleSheet.absoluteFillObject}
-      onCameraReady={undefined}
-      // tensor camera props
-      cameraTextureWidth={1080}
-      cameraTextureHeight={1920}
-      resizeWidth={200}
-      resizeHeight={150}
-      resizeDepth={3}
-      autorender={true}
-      useCustomShadersToResize={false}
-      onReady={handleCameraStream}
-    />
+    <View style={StyleSheet.absoluteFillObject}>
+      <TensorCamera
+        barCodeScannerSettings={{
+          barCodeTypes,
+        }}
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={{ flex: 1 }}
+        onCameraReady={undefined}
+        // tensor camera props
+        cameraTextureWidth={1080}
+        cameraTextureHeight={1920}
+        resizeWidth={200}
+        resizeHeight={150}
+        resizeDepth={3}
+        autorender={true}
+        useCustomShadersToResize={false}
+        onReady={handleCameraStream}
+      />
+      <Text style={{ textAlign: 'center', margin: 10 }}>
+        {prediction}
+      </Text>
+    </View>
   );
 };
 

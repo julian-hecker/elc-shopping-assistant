@@ -19,7 +19,7 @@ import useColorScheme from '../hooks/useColorScheme';
 import { ProductInfoModal } from '../screens/ProductInfoModal';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import ScannerScreen from '../screens/TabTwoScreen';
 import {
   RootStackParamList,
   RootTabParamList,
@@ -83,11 +83,20 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}
     >
+      <BottomTab.Screen
+        name="Scanner"
+        component={ScannerScreen}
+        options={{
+          title: 'Scanner',
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="camera" color={color} />
+          ),
+        }}
+      />
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
@@ -117,16 +126,6 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
-      />
-      <BottomTab.Screen
-        name="Scanner"
-        component={TabTwoScreen}
-        options={{
-          title: 'Scanner',
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="camera" color={color} />
-          ),
-        }}
       />
     </BottomTab.Navigator>
   );
