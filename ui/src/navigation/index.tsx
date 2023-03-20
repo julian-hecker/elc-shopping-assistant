@@ -97,7 +97,7 @@ function BottomTabNavigator() {
           ),
         }}
       />
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
@@ -126,7 +126,7 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
-      />
+      /> */}
     </BottomTab.Navigator>
   );
 }
